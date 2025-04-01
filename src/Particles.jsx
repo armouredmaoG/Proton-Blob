@@ -1,4 +1,4 @@
-import Proton, { Emitter, Span, WebGLRenderer, Rate, Body, Velocity, Alpha, Color, Scale } from 'proton-engine';
+import Proton from 'proton-engine';
 import { useEffect } from 'react';
 import './Particles.css';
 
@@ -15,7 +15,7 @@ const Particles = () => {
         "light_brown": "#fbe8d8",
         "dark_brown": "#ebddc4",
         "black": "#ebe8e3"
-    }
+    };
 
     const itemsLength = Object.keys(colors).length;
 
@@ -29,69 +29,78 @@ const Particles = () => {
         canvasWrap.style.backgroundColor = randomColor;
     }
 
-    const emitter = new Emitter();
-    const proton = new Proton();
-
-    function createImageEmitter() {
-        emitter.rate = new Rate(new Span(0, 0), new Proton.Span(0.01, 0.015));
-        emitter.addInitialize(new Proton.Mass(1));
-        emitter.addInitialize(new Proton.Life(0.1, 1));
-        emitter.addInitialize(
-            new Body("https://cdn.prod.website-files.com/67e3a3ec16164f290fb54343/67e3b0ee39871315ac536d66_particle.png")
-        );
-        emitter.addInitialize(new Proton.Radius(7));
-        emitter.addInitialize(new Proton.Velocity(new Proton.Span(0, 0), 500, "polar"));
-        emitter.addBehaviour(new Alpha(1, 0));
-        emitter.addBehaviour(new Color("#ffcc00", "#ffcc00"));
-        emitter.addBehaviour(new Scale(4, 4));
-
-        // Set the emitter's position to the center of the window
-        emitter.p.x = window.innerWidth / 2;
-        emitter.p.y = window.innerHeight / 2;
-
-        emitter.emit();
-        proton.addEmitter(emitter);
+    function tick() {
+        requestAnimationFrame(tick);
+        proton.update();
     }
 
+    const emitter = new Proton.Emitter();
+    const proton = new Proton();
     let timer;
-    document.addEventListener("mousemove", function (e) {
-        let emitterPosition;
-        emitterPosition = {
-            x: e.pageX,
-            y: e.pageY
-        };
-
-        emitter.p.x = emitterPosition.x;
-        emitter.p.y = emitterPosition.y;
-        emitter.rate = new Proton.Rate(new Proton.Span(1, 3), new Proton.Span(0.01, 0.01));
-
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            clearTimeout(timer);
-            emitter.rate = new Proton.Rate(new Proton.Span(0, 0), new Proton.Span(0.01, 0.01));
-        }, 60);
-    });
 
     useEffect(() => {
         const canvasWrap = document.querySelector(".canvas-wrap");
         const canvas = document.getElementById("colorCanvas");
 
-        createImageEmitter();
+        function createImageEmitter() {
+            emitter.rate = new Proton.Rate(new Proton.Span(0, 0), new Proton.Span(0.01, 0.015));
+            emitter.addInitialize(new Proton.Mass(1));
+            emitter.addInitialize(new Proton.Life(0.1, 1));
+            emitter.addInitialize(new Proton.Body("./particle.png"));
+            emitter.addInitialize(new Proton.Radius(7));
+            emitter.addInitialize(new Proton.Velocity(new Proton.Span(0, 0), 500, "polar"));
+            emitter.addBehaviour(new Proton.Alpha(1, 0));
+            emitter.addBehaviour(new Proton.Color("#ffcc00", "#ffcc00"));
+            emitter.addBehaviour(new Proton.Scale(0.4, 0.4));
 
-        // add canvas renderer
-        const renderer = new WebGLRenderer(canvas);
-        renderer.blendFunc("ONE", "ONE");
-        updateBannerColor(canvasWrap);
+            // Set the emitter's initial position to the center of the window
+            emitter.p.x = window.innerWidth / 2;
+            emitter.p.y = window.innerHeight / 2;
 
-        proton.addRenderer(renderer);
+            emitter.emit();
+            proton.addEmitter(emitter);
+        }
+
+        function createProton() {
+            createImageEmitter();
+            let renderer = new Proton.WebGLRenderer(canvas);
+            renderer.blendFunc("ONE", "ONE");
+            proton.addRenderer(renderer);
+            tick();
+        }
+
+        createProton();
 
         const intervalId = setInterval(function () {
             updateBannerColor(canvasWrap);
         }, 4000);
 
+        document.addEventListener("mousemove", function (e) {
+            // Get the position of the canvasWrap relative to the page
+            const rect = canvas.getBoundingClientRect();
+            
+            // Calculate the mouse position relative to the canvasWrap
+            let emitterPosition = {
+                x: e.clientX - rect.left, // Mouse X relative to canvasWrap
+                y: e.clientY - rect.top   // Mouse Y relative to canvasWrap
+            };
+
+            // Update emitter position based on the mouse
+            emitter.p.x = emitterPosition.x;
+            emitter.p.y = emitterPosition.y;
+
+            emitter.rate = new Proton.Rate(new Proton.Span(1, 3), new Proton.Span(0.01, 0.01));
+
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                clearTimeout(timer);
+                emitter.rate = new Proton.Rate(new Proton.Span(0, 0), new Proton.Span(0.01, 0.01));
+            }, 60);
+        });
+
         // Cleanup interval on component unmount to prevent memory leaks
         return () => clearInterval(intervalId);
-    });
+    }, []);
 
     return (
         <section className="canvas-wrap">

@@ -22,6 +22,7 @@ const Particles = () => {
     function getRandomInt(itemsLength) {
         return Math.floor(Math.random() * itemsLength);
     }
+
     const proton = new Proton();
     let timer, emitter;
 
@@ -42,9 +43,9 @@ const Particles = () => {
             emitter.addInitialize(new Proton.Mass(1));
             emitter.addInitialize(new Proton.Life(0.1, 1));
             emitter.addInitialize(new Proton.Body("./particle.png"));
-            emitter.addInitialize(new Proton.Radius(7));
-            emitter.addInitialize(new Proton.Velocity(new Proton.Span(0, 0), 500, "polar"));
-            emitter.addBehaviour(new Proton.Alpha(1, 0));
+            // emitter.addInitialize(new Proton.Radius(7));
+            // emitter.addInitialize(new Proton.Velocity(new Proton.Span(0, 0), 500, "polar"));
+            emitter.addBehaviour(new Proton.Alpha(0.8, 0));
             emitter.addBehaviour(new Proton.Color("#ffcc00", "#ffcc00"));
             emitter.addBehaviour(new Proton.Scale(4, 4));
             emitter.p.x = window.innerWidth / 2;
@@ -75,8 +76,6 @@ const Particles = () => {
             }, 1500);
             createProton();
             tick();
-
-
 
             canvasWrap.addEventListener("mousemove", function (e) {
                 const canvasRect = canvas.getBoundingClientRect();

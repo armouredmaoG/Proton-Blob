@@ -9,12 +9,19 @@ body {
 .canvas-wrap{
   width: 100svw;
   height: 100svh;
+  cursor: pointer;
+  position: relative;
+  isolation: isolate;
 }
 
 #colorCanvas{
-  cursor: pointer;
+  pointer-events: none;
   mix-blend-mode: overlay;
+  transition: background-color 4s cubic-bezier(0.28, 0, 0.18, 1);
   width: 100%;
   height: 100%;
-  transition: background-color 4s cubic-bezier(0.28, 0, 0.18, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }

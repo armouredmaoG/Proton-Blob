@@ -3,9 +3,6 @@ body,h1, section,figure {
   padding: 0;
 }
 
-body {
-  font-family: Arial, sans-serif;
-}
 .canvas-wrap{
   width: 100svw;
   height: 100svh;
@@ -13,6 +10,9 @@ body {
   position: relative;
   isolation: isolate;
   transition: background-color 4s cubic-bezier(0.28, 0, 0.18, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #colorCanvas{
@@ -24,4 +24,17 @@ body {
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+.content-wrap{
+  mix-blend-mode: luminosity;
+  color: #222222;
+  opacity: 0.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.content-wrap p{
+  font-size: 0.75rem;
 }

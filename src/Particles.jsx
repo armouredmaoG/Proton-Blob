@@ -98,6 +98,11 @@ const Particles = () => {
     return (
         <section className="canvas-wrap">
             <canvas id="colorCanvas"></canvas>
+            <div className="content-wrap">
+                <h1>Let the Color be your Guide</h1>
+                <p>(Mouse your mouse around :D)</p>
+            </div>
+            
         </section>
     );
 };

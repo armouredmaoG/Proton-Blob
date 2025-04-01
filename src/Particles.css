@@ -12,12 +12,12 @@ body {
   cursor: pointer;
   position: relative;
   isolation: isolate;
+  transition: background-color 4s cubic-bezier(0.28, 0, 0.18, 1);
 }
 
 #colorCanvas{
   pointer-events: none;
   mix-blend-mode: overlay;
-  transition: background-color 4s cubic-bezier(0.28, 0, 0.18, 1);
   width: 100%;
   height: 100%;
   position: absolute;
